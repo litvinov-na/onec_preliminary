@@ -11,3 +11,7 @@
 * Clone this repository
 
 * Run `flutter run`
+
+## Example Usage
+
+You can see how the app looks [here](https://github.com/litvinov-na/onec_preliminary/~/raw/main/usage.mp4)
