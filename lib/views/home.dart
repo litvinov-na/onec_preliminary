@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(index: _index, children: const [MealsPage(), DishesPage()]),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) => setState(() => _index = value),
+        currentIndex: _index,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.restaurant), label: 'Dishes'),

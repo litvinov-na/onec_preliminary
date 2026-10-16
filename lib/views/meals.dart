@@ -1,3 +1,4 @@
+import 'package:calorie_tracker/features/dish/repository.dart';
 import 'package:calorie_tracker/features/meal/repository.dart';
 import 'package:calorie_tracker/features/meal/ui/editor.dart';
 import 'package:calorie_tracker/utils/date.dart';
@@ -16,33 +17,41 @@ class MealsPage extends StatefulWidget {
 
 class _MealsPageState extends State<MealsPage> {
   DateTime _date = DateTime.now().weekStart;
-  int _weekDayIndex = 0;
+  final PageController _pageController = PageController(initialPage: DateTime.now().weekday - 1);
+  
+  int get _weekDayIndex => _pageController.hasClients ? _pageController.page!.round() : DateTime.now().weekday - 1;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Dish's macros may change
+    context.watch<DishRepository>();
     final mealRepo = context.watch<MealRepository>();
     final byWeek = mealRepo.byWeek(_date);
     return Column(
       children: [
         SizedBox(
           height: 300,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final oneSeventh = constraints.maxWidth / 7;
-              return BarChart(
-                BarChartData(
-                  barGroups: byWeek
-                      .map((meals) => BarChartGroupData(x: meals.fold(0, (acc, meal) => acc + meal.kCalories)))
-                      .toList(),
-                  barTouchData: BarTouchData(
-                    touchCallback: (event, response) {
-                      if (response == null) return;
-                      setState(() => _weekDayIndex = response.touchLocation.dx ~/ oneSeventh);
-                    },
-                  ),
-                ),
-              );
-            },
+          child: BarChart(
+            BarChartData(
+              barGroups: byWeek.indexed.map((item) {
+                final kCalories = item.$2.fold(0, (acc, meal) => acc + meal.kCalories);
+                return BarChartGroupData(
+                  x: item.$1,
+                  barRods: [
+                    BarChartRodData(
+                      toY: kCalories.toDouble(),
+                      label: BarChartRodLabel(text: '$kCalories'),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
           ),
         ),
         Row(
@@ -64,32 +73,39 @@ class _MealsPageState extends State<MealsPage> {
             ),
           ],
         ),
+        Text(DateFormat.MMMd().format(_date.add(Duration(days: _weekDayIndex)))),
         Expanded(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: byWeek[_weekDayIndex].length,
+          child: PageView.builder(
+            onPageChanged: (value) => setState(() {}),
+            itemCount: byWeek.length,
             itemBuilder: (context, index) {
-              final meal = byWeek[_weekDayIndex][index];
-              return ListTile(
-                onLongPress: () async {
-                  final shouldDelete = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => ConfirmationDialog(actionText: 'Delete'),
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: byWeek[_weekDayIndex].length,
+                itemBuilder: (context, index) {
+                  final meal = byWeek[_weekDayIndex][index];
+                  return ListTile(
+                    onLongPress: () async {
+                      final shouldDelete = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => ConfirmationDialog(actionText: 'Delete'),
+                      );
+                      if (shouldDelete == true) {
+                        mealRepo.remove(meal);
+                      }
+                    },
+                    title: Text(meal.name),
+                    subtitle: Text('${meal.kCalories} kcal'),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () async {
+                        final editedMeal = await MealEditor.dialog(context: context, meal: meal);
+                        if (editedMeal == null) return;
+                        mealRepo.put(editedMeal);
+                      },
+                    ),
                   );
-                  if (shouldDelete == true) {
-                    mealRepo.remove(meal);
-                  }
                 },
-                title: Text(meal.name),
-                subtitle: Text('${meal.kCalories} kcal'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () async {
-                    final editedMeal = await MealEditor.dialog(context: context, meal: meal);
-                    if (editedMeal == null) return;
-                    mealRepo.put(editedMeal);
-                  },
-                ),
               );
             },
           ),

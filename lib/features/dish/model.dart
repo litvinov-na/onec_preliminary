@@ -31,4 +31,10 @@ class Dish {
         '${(fats * grams / 100).round()}\n'
         'Calories: ${(kCalories * grams / 100).round()} (${grams}g) | $kCalories kcal/100g';
   }
+
+  @override
+  bool operator ==(Object other) => other.runtimeType == runtimeType && other is Dish && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

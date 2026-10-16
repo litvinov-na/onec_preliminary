@@ -13,4 +13,10 @@ class Meal {
   ToMany<Dish> dishes;
 
   int get kCalories => dishes.fold(0, (acc, dish) => acc + dish.totalKCalories);
+
+  @override
+  bool operator ==(Object other) => other.runtimeType == runtimeType && other is Meal && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

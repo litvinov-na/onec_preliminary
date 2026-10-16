@@ -16,12 +16,15 @@ class DishesPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Center(child: Text('No dishes yet')),
-          FilledButton(
-            onPressed: () async {
-              final newDish = await DishEditor.dialog(context: context, dish: null);
-              if (newDish != null) dishRepo.put(newDish);
-            },
-            child: Text('Add new dish'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FilledButton(
+              onPressed: () async {
+                final newDish = await DishEditor.dialog(context: context, dish: null);
+                if (newDish != null) dishRepo.put(newDish);
+              },
+              child: Text('Add new dish'),
+            ),
           ),
         ],
       );

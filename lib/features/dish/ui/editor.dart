@@ -61,50 +61,54 @@ class _DishEditorState extends State<DishEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            controller: _nameController,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a name';
-              }
-              return null;
-            },
-            decoration: const InputDecoration(labelText: 'Name', border: OutlineInputBorder()),
-          ),
-          _intField(controller: _gramsController, label: 'Grams'),
-          _intField(controller: _caloriesController, label: 'KCalories (per 100g)'),
-          _intField(controller: _proteinController, label: 'Protein (per 100g)'),
-          _intField(controller: _carbsController, label: 'Carbs (per 100g)'),
-          _intField(controller: _fatsController, label: 'Fats (per 100g)'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FilledButton(onPressed: widget.onCancel, child: const Text('Cancel')),
-              FilledButton(
-                onPressed: () {
-                  if (!_formKey.currentState!.validate()) {
-                    return;
-                  }
-                  final dish = Dish(
-                    id: widget.dish?.id ?? 0,
-                    name: _nameController.text,
-                    grams: int.parse(_gramsController.text),
-                    kCalories: int.parse(_caloriesController.text),
-                    carbs: int.parse(_carbsController.text),
-                    fats: int.parse(_fatsController.text),
-                    protein: int.parse(_proteinController.text),
-                  );
-                  widget.onSave(dish);
-                },
-                child: const Text('Save'),
-              ),
-            ],
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          spacing: 8.0,
+          children: [
+            TextFormField(
+              controller: _nameController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a name';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(labelText: 'Name', border: OutlineInputBorder()),
+            ),
+            _intField(controller: _gramsController, label: 'Grams'),
+            _intField(controller: _caloriesController, label: 'KCalories (per 100g)'),
+            _intField(controller: _proteinController, label: 'Protein (per 100g)'),
+            _intField(controller: _carbsController, label: 'Carbs (per 100g)'),
+            _intField(controller: _fatsController, label: 'Fats (per 100g)'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FilledButton(onPressed: widget.onCancel, child: const Text('Cancel')),
+                FilledButton(
+                  onPressed: () {
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+                    final dish = Dish(
+                      id: widget.dish?.id ?? 0,
+                      name: _nameController.text,
+                      grams: int.parse(_gramsController.text),
+                      kCalories: int.parse(_caloriesController.text),
+                      carbs: int.parse(_carbsController.text),
+                      fats: int.parse(_fatsController.text),
+                      protein: int.parse(_proteinController.text),
+                    );
+                    widget.onSave(dish);
+                  },
+                  child: const Text('Save'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
