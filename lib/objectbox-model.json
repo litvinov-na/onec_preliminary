@@ -1,0 +1,92 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2259604535164976452",
+      "lastPropertyId": "7:2232916021844700818",
+      "name": "Dish",
+      "properties": [
+        {
+          "id": "1:3603817346597299227",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7215090333221288325",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:1705318780861834020",
+          "name": "grams",
+          "type": 6
+        },
+        {
+          "id": "4:4620923131658541828",
+          "name": "kCalories",
+          "type": 6
+        },
+        {
+          "id": "5:2122517179148913084",
+          "name": "protein",
+          "type": 6
+        },
+        {
+          "id": "6:5649822681380754117",
+          "name": "carbs",
+          "type": 6
+        },
+        {
+          "id": "7:2232916021844700818",
+          "name": "fats",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:8495549715119080536",
+      "lastPropertyId": "3:494956052602582714",
+      "name": "Meal",
+      "properties": [
+        {
+          "id": "1:4863474844122140287",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:9160765499458054009",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:494956052602582714",
+          "name": "date",
+          "type": 10
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:6302313632253325664",
+          "name": "dishes",
+          "targetId": "1:2259604535164976452"
+        }
+      ]
+    }
+  ],
+  "lastEntityId": "2:8495549715119080536",
+  "lastIndexId": "0:0",
+  "lastRelationId": "1:6302313632253325664",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
